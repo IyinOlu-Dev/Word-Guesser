@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import random
 from engine import GameMechanics
 
@@ -40,47 +39,4 @@ while playing_again:
     replay = input("Play again y/n: ").lower().strip()
     if replay != "y":
         playing_again = False
-=======
-import random
-from engine import GameMechanics
-
-
-playing_again = True
-while playing_again:
-
-    with open("words.txt", "r") as file:
-        lines = file.read().splitlines()
-
-    random_word = random.choice(lines).lower()
-    word_lenght = len(random_word)
-
-
-    Game = True
-    while Game:
-        user_guess = str(input(f"Please guess the words. HINT: It is a {word_lenght} letter word: ")).lower().strip()
-
-        game = GameMechanics(random_word, user_guess)
-
-        is_valid, word_len, guess_len = game.lenght_check()
-        
-        if is_valid:
-        
-            print(game.word)
-            print(game.guess)
-
-            check = game.compare_words()
-        
-            if all(status == "green" for status in check):
-                print("YOU WIN!!!")
-                Game = False
-            else:
-                for i, status in enumerate(check):
-                    print(f"letter at position {i}: {user_guess[i]} is {status.upper()}")
-        else:
-            print(f"Wrong length! You entered {guess_len} letters, but it must be {word_len}.")
-
-    replay = input("Play again y/n: ").lower().strip()
-    if replay != "y":
-        playing_again = False
->>>>>>> 114f70e963a97da9045840a632b68feb191c455d
         print("Thanks for playing the game")
