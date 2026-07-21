@@ -1,6 +1,8 @@
 import customtkinter as ctk
 from engine import GameMechanics
 import random
+import sys
+import os
 
 class WordUI(ctk.CTkFrame):
     def __init__(self, master, word_len):
@@ -124,6 +126,11 @@ class WordleUI(ctk.CTk):
 
 
 #==============================Execution===========================#
+
+def resource_path(relative_path):
+    base_path = getattr(sys, "_MEIPASS", os.path.dirname(os.path.abspath(__file__)))
+    return os.path.join(base_path, relative_path)
+
 with open("words.txt", "r") as file:
     lines = file.read().splitlines()
 
