@@ -140,10 +140,6 @@ class WordleUI(ctk.CTk):
             self.show_popup(text=f"You Lost! The word was {self.secret_word}")
             self.submit_button.configure(state="disabled")
             return
-        else:
-            print("You are wrong")
-            print(f"word was {self.secret_word}")
-            print(f"You guess was {guess}")
             
         self.new_row()
         self.word_ui.entries[0].focus_set()
