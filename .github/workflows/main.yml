@@ -45,7 +45,7 @@ jobs:
         run: uv sync
 
       - name: Build executable
-        run: uv run pyinstaller --onefile --windowed --add-data "words.txt${{ matrix.add_data_sep }}." ${{ matrix.icon_flag }} UI.py
+        run: uv run pyinstaller --onefile --windowed --noupx --add-data "words.txt${{ matrix.add_data_sep }}." ${{ matrix.icon_flag }} UI.py
 
       - name: Package output
         shell: bash
