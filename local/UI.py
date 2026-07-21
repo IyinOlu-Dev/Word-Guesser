@@ -5,17 +5,20 @@ import sys
 import os
 
 class WordUI(ctk.CTkFrame):
-    def __init__(self, master, word_len):
+    def __init__(self, master, word_len, on_complete = None):
         super().__init__(master)
         
         self.word_length = word_len
         self.entries = []
+        self.on_complete = on_complete
 
         for i in range (word_len):
             entry = ctk.CTkEntry(self, fg_color = "grey", width = 40)
             entry.grid(row=1, column = i+1, padx = 5, pady=5)
-            entry.bind("<KeyRelease>", lambda event, e=entry: self.limit_length(event, e))
+            entry.bind("<KeyRelease>", lambda event, e=entry, idx=i: self.handle_key(event, e, idx))
             self.entries.append(entry)
+            
+        self.entries[0].focus_set() 
     
     def set_status(self, index, color):
         self.entries[index].configure(fg_color=color) 
@@ -31,11 +34,26 @@ class WordUI(ctk.CTkFrame):
         for entry in self.entries:
             entry.configure(state="disabled")
     
-    def limit_length(self, event, entry):
+    def handle_key(self, event, entry, idx):
         text = entry.get()
-        if len(text) >1:
+        if len(text) > 1:
             entry.delete(0, "end")
             entry.insert(0, text[-1])
+            text = text[-1]
+
+        # Backspace: move to previous box if this one is empty
+        if event.keysym == "BackSpace":
+            if text == "" and idx > 0:
+                self.entries[idx - 1].focus_set()
+            return
+
+        # Typing a letter: move to next box
+        if text != "":
+            if idx + 1 < len(self.entries):
+                self.entries[idx + 1].focus_set()
+            elif self.on_complete:
+                self.on_complete() 
+    
 
 class WordleUI(ctk.CTk):
     MAX_ATTEMPTS = 6    
@@ -54,11 +72,16 @@ class WordleUI(ctk.CTk):
 
         #-----------------------UI--------------------------------#
 
+        self.life_label = ctk.CTkLabel(self, text=f"{self.MAX_ATTEMPTS - self.attempts} tries left")
+        self.life_label.pack() 
+
         self.row = ctk.CTkFrame(self)
         self.row.pack(pady=10)
         
         self.message = ctk.CTkLabel(self, text="")
         self.message.pack()
+        
+
         
         self.word_ui = None
         self.new_row()
@@ -70,7 +93,7 @@ class WordleUI(ctk.CTk):
     def show_popup(self, text):
         popup = ctk.CTkToplevel(self)
         popup.title("WordGuesser")
-        popup.geometry("150x150")
+        popup.geometry("350x200")
         popup.attributes("-topmost", True)
         
         label = ctk.CTkLabel(popup, text=text, font=("Arial", 20))
@@ -123,6 +146,7 @@ class WordleUI(ctk.CTk):
             print(f"You guess was {guess}")
             
         self.new_row()
+        self.word_ui.entries[0].focus_set()
 
 
 #==============================Execution===========================#
