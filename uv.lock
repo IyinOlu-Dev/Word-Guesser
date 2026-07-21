@@ -129,11 +129,15 @@ name = "local"
 version = "0.1.0"
 source = { virtual = "local" }
 dependencies = [
+    { name = "customtkinter" },
     { name = "pyinstaller" },
 ]
 
 [package.metadata]
-requires-dist = [{ name = "pyinstaller", specifier = ">=6.21.0" }]
+requires-dist = [
+    { name = "customtkinter", specifier = ">=6.0.0" },
+    { name = "pyinstaller", specifier = ">=6.21.0" },
+]
 
 [[package]]
 name = "macholib"
