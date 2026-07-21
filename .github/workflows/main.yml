@@ -9,6 +9,7 @@ on:
 jobs:
   build:
     strategy:
+      fail-fast: false
       matrix:
         include:
           - os: windows-latest
@@ -25,7 +26,6 @@ jobs:
             artifact_name: wordguesser-linux
 
     runs-on: ${{ matrix.os }}
-
     defaults:
       run:
         working-directory: local
@@ -66,7 +66,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.artifact_name }}
-          path: local/dist/*
+          path: local/dist/${{ matrix.artifact_name }}*
 
   release:
     needs: build
@@ -74,7 +74,6 @@ jobs:
     if: startsWith(github.ref, 'refs/tags/v')
     permissions:
       contents: write
-
     steps:
       - name: Download all artifacts
         uses: actions/download-artifact@v4
