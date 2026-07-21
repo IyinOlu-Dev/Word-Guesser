@@ -26,6 +26,10 @@ jobs:
 
     runs-on: ${{ matrix.os }}
 
+    defaults:
+      run:
+        working-directory: local
+
     steps:
       - uses: actions/checkout@v4
 
