@@ -36,11 +36,25 @@ jobs:
         run: uv sync
       - name: Build executable
         run: uv run pyinstaller --onefile --windowed --add-data "words.txt${{ matrix.add_data_sep }}." ${{ matrix.icon_flag }} UI.py
+
+      - name: Package output
+        shell: bash
+        run: |
+          cd dist
+          if [ "${{ matrix.os }}" = "windows-latest" ]; then
+            mv UI.exe ${{ matrix.artifact_name }}.exe
+          elif [ "${{ matrix.os }}" = "macos-latest" ]; then
+            mv UI.app ${{ matrix.artifact_name }}.app
+            zip -r ${{ matrix.artifact_name }}.zip ${{ matrix.artifact_name }}.app
+            rm -rf ${{ matrix.artifact_name }}.app
+          else
+            mv UI ${{ matrix.artifact_name }}
+          fi
+
       - uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.artifact_name }}
           path: local/dist/*
-
   release:
     needs: build
     runs-on: ubuntu-latest
@@ -52,7 +66,6 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           path: artifacts
-
       - name: Create release
         uses: softprops/action-gh-release@v2
         with:
