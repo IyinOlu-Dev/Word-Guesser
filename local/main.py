@@ -1,6 +1,5 @@
 import random
 from engine import GameMechanics
-from UI import wordleUI
 
 
 playing_again = True
@@ -10,22 +9,21 @@ while playing_again:
         lines = file.read().splitlines()
 
     random_word = random.choice(lines).lower()
-    word_lenght = len(random_word)
+    word_length = len(random_word)
     
     tries = 6
 
     Game = True
     while Game:
-        user_guess = str(input(f"Please guess the words. HINT: It is a {word_lenght} letter word: ")).lower().strip()
+        user_guess = str(input(f"Please guess the words. HINT: It is a {word_length} letter word: ")).lower().strip()
         game = GameMechanics(random_word, user_guess)
-        if tries == 0:
-            Game = False
 
-        is_valid, word_len, guess_len = game.lenght_check()
-        print(game.word)
+            
+
+        is_valid, word_len, guess_len = game.length_check()
         if is_valid:
-        
-            print(game.word)
+            tries -=1
+            
             print(game.guess)
 
             check = game.compare_words()
@@ -36,12 +34,15 @@ while playing_again:
             else:
                 for i, status in enumerate(check):
                     print(f"letter at position {i}: {user_guess[i]} is {status.upper()}")
-                    tries -=1
-                    print(tries)
+            print(f"Tries left: {tries}")
         else:
             print(f"Wrong length! You entered {guess_len} letters, but it must be {word_len}.")
-
+        
+        
+        if tries == 0 and Game:
+            print(f"You Lose. \nThe word was {random_word}" )
+            Game = False
     replay = input("Play again y/n: ").lower().strip()
-    if replay != "y":
+    if replay not in ("y", "yes") :
         playing_again = False
         print("Thanks for playing the game")

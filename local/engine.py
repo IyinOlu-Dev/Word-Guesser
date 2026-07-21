@@ -3,7 +3,7 @@ class GameMechanics:
         self.word = word
         self.guess = guess
         
-    def lenght_check(self) -> tuple[bool, int, int]:
+    def length_check(self) -> tuple[bool, int, int]:
         is_valid =  len(self.word) == len(self.guess)
         return is_valid, len(self.word), len(self.guess)
 
