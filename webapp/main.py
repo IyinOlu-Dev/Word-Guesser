@@ -1,16 +1,28 @@
 from fastapi import FastAPI, status, HTTPException
 from fastapi.staticfiles import StaticFiles
-from local.engine import GameMechanics
+from core.engine import GameMechanics
 from pydantic import BaseModel
 
+from pathlib import Path
 
 app = FastAPI()
+
+WORD_PATH = Path(__file__).resolve().parent.parent /"core"/"words"
+static =  Path(__file__).resolve().parent/"statics"
+
+
 
 class GuessRequest(BaseModel):
     guess: str
     word: str
 
-@app.post("/")
+
+# @app.get("/")
+# def home():
+#     return {"message": "hello"}
+
+
+@app.post("/word-guesser")
 def guess(req: GuessRequest):
     game = GameMechanics(req.word, req.guess)
     
@@ -25,5 +37,5 @@ def guess(req: GuessRequest):
         return {"result": game.compare_words()}
     
     
-app.mount("/", StaticFiles(directory="static", html=True), name = "static")
+app.mount("/", StaticFiles(directory=static, html=True), name = "statics")
     

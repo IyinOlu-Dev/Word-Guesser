@@ -1,8 +1,9 @@
 import customtkinter as ctk
-from engine import GameMechanics
+from core.engine import GameMechanics
 import random
 import sys
 import os
+from pathlib import Path
 
 class WordUI(ctk.CTkFrame):
     def __init__(self, master, word_len, on_complete = None):
@@ -53,7 +54,6 @@ class WordUI(ctk.CTkFrame):
                 self.entries[idx + 1].focus_set()
             elif self.on_complete:
                 self.on_complete() 
-    
 
 class WordleUI(ctk.CTk):
     MAX_ATTEMPTS = 6    
@@ -107,9 +107,10 @@ class WordleUI(ctk.CTk):
         self.word_ui.pack(pady = 10)
         
     def restart_game(self):
-        self.secret_word = random.choice(self.word_list)
+        self.secret_word = random.choice(self.word_list).lower()
         self.word_len = len(self.secret_word)
         self.attempts = 0
+        self.life_label.configure(text=f"{self.MAX_ATTEMPTS} tries left")
         
         for widgets in self.row.winfo_children():
             widgets.destroy()
@@ -131,6 +132,7 @@ class WordleUI(ctk.CTk):
         self.word_ui.apply_color(colors)
         self.word_ui.lock_row()
         self.attempts +=1
+        self.life_label.configure(text=f"{self.MAX_ATTEMPTS - self.attempts} tries left")
         
         if self.secret_word == guess:
             self.show_popup(text="You are correct")
@@ -147,12 +149,14 @@ class WordleUI(ctk.CTk):
 
 #==============================Execution===========================#
 
+WORDS_PATH = Path(__file__).resolve().parent.parent /"core"/"words.txt"
+
 def resource_path(relative_path):
     base_path = getattr(sys, "_MEIPASS", os.path.dirname(os.path.abspath(__file__)))
     return os.path.join(base_path, relative_path)
 
-with open(resource_path("words.txt"), "r") as file:
-    lines = file.read().splitlines()
+with open(resource_path(WORDS_PATH), "r") as file:
+    lines = [line.lower() for line in file.read().splitlines()]
 
 random_word = random.choice(lines).lower()
 

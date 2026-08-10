@@ -1,11 +1,14 @@
 import random
-from engine import GameMechanics
+from core.engine import GameMechanics
+from pathlib import Path
+
+WORDS_PATH = Path(__file__).resolve().parent.parent/"core"/"words.txt"
 
 
 playing_again = True
 while playing_again:
 
-    with open("words.txt", "r") as file:
+    with open(WORDS_PATH, "r") as file:
         lines = file.read().splitlines()
 
     random_word = random.choice(lines).lower()
@@ -15,7 +18,9 @@ while playing_again:
 
     Game = True
     while Game:
+        print(f"You have {tries} tries left")
         user_guess = str(input(f"Please guess the words. HINT: It is a {word_length} letter word: ")).lower().strip()
+
         game = GameMechanics(random_word, user_guess)
 
             
