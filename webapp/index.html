@@ -11,6 +11,10 @@
         <div id="grid"></div>
         <button id="restart-btn" onclick="resetGame()" style="margin-top: 20px; display: none;">Play Again</button>
     </div>
+
+    <!-- Hidden input to trigger the mobile virtual keyboard -->
+    <input type="text" id="mobile-input" style="position: absolute; opacity: 0; pointer-events: none; height: 0; width: 0;" autocomplete="false" autocapitalize="characters">
+
     <script src="app.js"></script>
 </body>
 </html>

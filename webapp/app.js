@@ -159,6 +159,45 @@ function resetGame() {
     loadTargetWord(); // Fetches a new word and rebuilds the grid automatically
 }
 
+// Keep the hidden mobile input focused so the virtual keyboard stays available
+document.addEventListener("click", () => {
+    const mobileInput = document.getElementById("mobile-input");
+    if (mobileInput) mobileInput.focus();
+});
+
+// Listen to typing from the mobile input element
+document.addEventListener("DOMContentLoaded", () => {
+    const mobileInput = document.getElementById("mobile-input");
+    if (mobileInput) {
+        mobileInput.focus();
+        
+        mobileInput.addEventListener("input", (e) => {
+            const val = e.target.value;
+            if (val.length > 0) {
+                const char = val[val.length - 1].toUpperCase();
+                if (/^[A-Z]$/.test(char)) {
+                    addLetter(char);
+                }
+                e.target.value = ""; // Clear input buffer
+            }
+        });
+    }
+});
+
+// Handle mobile backspace and enter keys
+document.addEventListener("keydown", (e) => {
+    if (currentRow >= maxGuesses) return;
+
+    if (e.key === "Enter") {
+        submitGuess();
+    } else if (e.key === "Backspace") {
+        deleteLetter();
+    } else if (/^[a-zA-Z]$/.test(e.key)) {
+        addLetter(e.key.toUpperCase());
+    }
+});
+
+
 // Initial startup call
 initBoardArray();
 createGrid();
