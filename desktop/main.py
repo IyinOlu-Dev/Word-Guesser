@@ -4,7 +4,6 @@ from pathlib import Path
 
 WORDS_PATH = Path(__file__).resolve().parent.parent/"core"/"words.txt"
 
-
 playing_again = True
 while playing_again:
 
