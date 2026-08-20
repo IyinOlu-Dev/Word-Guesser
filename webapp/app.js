@@ -1,4 +1,4 @@
-let targetWord = "APPLE"; // Default fallback word
+let targetWord = "";
 const maxGuesses = 6;
 let currentRow = 0;
 let currentTile = 0;
@@ -42,7 +42,7 @@ function createGrid() {
 // 2. Fetch words in the background and rebuild board to match length
 async function loadTargetWord() {
     try {
-        const response = await fetch('../core/words.txt');
+        const response = await fetch('/core/words.txt');
         const text = await response.text();
         const words = text.split('\n').map(w => w.trim().toUpperCase()).filter(w => w.length > 0);
         
