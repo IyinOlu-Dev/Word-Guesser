@@ -1,4 +1,4 @@
-let targetWord = "";
+let targetWord = "APPLE";
 const maxGuesses = 6;
 let currentRow = 0;
 let currentTile = 0;
