@@ -96,29 +96,46 @@ function updateTileUI(row, tile, letter) {
 }
 
 // 4. Process and evaluate the guess dynamically
+// 4. Process and evaluate the guess dynamically
 function submitGuess() {
     if (currentTile < targetWord.length) {
         alert(`Not enough letters! (Needs ${targetWord.length})`);
         return;
     }
 
-    const guessArray = board[currentRow]; 
-    const targetArray = targetWord.split('');
+    const guessArray = [...board[currentRow]]; 
+    const targetArray = [...targetWord.split('')];
+    const tileStatuses = new Array(guessArray.length).fill("absent");
 
-    // Evaluate each letter
+    // First pass: Check for correct (green) letters
     guessArray.forEach((letter, index) => {
-        const tileDiv = document.getElementById(`tile-${currentRow}-${index}`);
-        
         if (letter === targetArray[index]) {
-            tileDiv.classList.add("correct");
-        } else if (targetArray.includes(letter)) {
-            tileDiv.classList.add("present");
-        } else {
-            tileDiv.classList.add("absent");
+            tileStatuses[index] = "correct";
+            targetArray[index] = null; // Mark as used
+            guessArray[index] = null;
         }
     });
 
-    if (guessArray.join("") === targetWord) {
+    // Second pass: Check for present (yellow) letters
+    guessArray.forEach((letter, index) => {
+        if (letter === null) return; // Already matched as correct
+
+        const targetIndex = targetArray.indexOf(letter);
+        if (targetIndex !== -1) {
+            tileStatuses[index] = "present";
+            targetArray[targetIndex] = null; // Mark as used
+        } else {
+            tileStatuses[index] = "absent";
+        }
+    });
+
+    // Apply the statuses to the UI
+    tileStatuses.forEach((status, index) => {
+        const tileDiv = document.getElementById(`tile-${currentRow}-${index}`);
+        tileDiv.classList.add(status);
+    });
+
+    if (board[currentRow].join("") === targetWord) {
         alert("You Win!");
         currentRow = maxGuesses; 
         document.getElementById("restart-btn").style.display = "inline-block"; 
