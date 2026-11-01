@@ -2,19 +2,31 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <title>Word Guesser</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div id="game-container">
-        <h1>Word Guesser</h1>
-        <div id="grid"></div>
-        <button id="restart-btn" onclick="resetGame()" style="margin-top: 20px; display: none;">Play Again</button>
-    </div>
+    <main id="game">
+        <header>
+            <h1>Word Guesser</h1>
+            <p id="subtitle">Loading a word…</p>
+        </header>
 
-    <!-- Hidden input to trigger the mobile virtual keyboard -->
-    <input type="text" id="mobile-input" style="position: absolute; opacity: 0; pointer-events: none; height: 0; width: 0;" autocomplete="false" autocapitalize="characters">
+        <div id="grid" role="grid" aria-label="Guess board"></div>
 
+        <section id="result" hidden aria-live="polite">
+            <p id="result-text"></p>
+            <button id="restart-btn" type="button">Play again</button>
+        </section>
+
+        <div id="keyboard" aria-label="On-screen keyboard"></div>
+    </main>
+
+    <div id="toast" role="status" aria-live="polite"></div>
     <script src="app.js"></script>
 </body>
 </html>
