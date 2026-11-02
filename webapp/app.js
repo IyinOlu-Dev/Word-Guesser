@@ -63,7 +63,7 @@ function makeKey(k) {
 
 async function loadTargetWord() {
     try {
-        const response = await fetch("/core/words.txt");
+        const response = await fetch("/words.txt");
         const text = await response.text();
         const words = text.split("\n").map((w) => w.trim().toUpperCase()).filter(Boolean);
         if (words.length) targetWord = words[Math.floor(Math.random() * words.length)];
