@@ -120,12 +120,12 @@ function deleteLetter() {
 }
 
 /* ---------- Feedback ---------- */
-function toast(message) {
+function toast(message, ms = 1600) {
     const el = $("toast");
     el.textContent = message;
     el.classList.add("show");
     clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => el.classList.remove("show"), 1600);
+    toastTimer = setTimeout(() => el.classList.remove("show"), ms);
 }
 
 function shakeRow(row) {
@@ -220,14 +220,38 @@ startRound();
 loadTargetWord();
 
 /* ---------- PWA ---------- */
-if ("serviceWorker" in navigator) {
-    window.addEventListener("load", () => {
-        navigator.serviceWorker.register("sw.js").catch((err) => console.error("Service worker failed", err));
+const installBtn = $("install-btn");
+let deferredPrompt = null;
+const isStandalone = window.matchMedia("(display-mode: standalone)").matches || navigator.standalone;
+const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent) && !window.MSStream;
+
+if (!isStandalone) {
+    window.addEventListener("beforeinstallprompt", (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        installBtn.hidden = false;
     });
+    if (isIOS) installBtn.hidden = false; // iOS has no install API; button shows instructions
 }
+
+installBtn.addEventListener("click", async () => {
+    if (deferredPrompt) {
+        deferredPrompt.prompt();
+        await deferredPrompt.userChoice;
+        deferredPrompt = null;
+        installBtn.hidden = true;
+    } else if (isIOS) {
+        toast("Tap Share, then Add to Home Screen", 4500);
+    }
+});
+
+window.addEventListener("appinstalled", () => {
+    deferredPrompt = null;
+    installBtn.hidden = true;
+});
 
 if ("serviceWorker" in navigator) {
     window.addEventListener("load", () => {
-        navigator.serviceWorker.register("sw.js").catch((err) => console.error("SW registration failed", err));
+        navigator.serviceWorker.register("sw.js").catch((err) => console.error("Service worker failed", err));
     });
 }

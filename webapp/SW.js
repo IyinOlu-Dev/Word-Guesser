@@ -1,7 +1,7 @@
-const CACHE = "word-guesser-v1";
+const CACHE = "word-guesser-v";
 const SHELL = [
     "./", "./index.html", "./styles.css", "./app.js",
-    "./manifest.webmanifest", "./icons/icon-192.png", "./icons/icon-512.png"
+    "./manifest.webmanifest", "./icon-192.png", "./icon-512.png"
 ];
 
 self.addEventListener("install", (e) => {
