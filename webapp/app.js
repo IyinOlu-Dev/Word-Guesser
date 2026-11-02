@@ -218,3 +218,16 @@ $("restart-btn").addEventListener("click", resetGame);
 /* ---------- Start ---------- */
 startRound();
 loadTargetWord();
+
+/* ---------- PWA ---------- */
+if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+        navigator.serviceWorker.register("sw.js").catch((err) => console.error("Service worker failed", err));
+    });
+}
+
+if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+        navigator.serviceWorker.register("sw.js").catch((err) => console.error("SW registration failed", err));
+    });
+}
